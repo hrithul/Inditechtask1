@@ -1,0 +1,40 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const DepartmentPage = () => {
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/departments'); 
+        setDepartments(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the departments:", error);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
+
+  return (
+    <div className="department-page">
+      <h1>Departments</h1>
+      {departments.length > 0 ? (
+        <ul>
+          {departments.map((department) => (
+            <li key={department._id}>
+              <h2>{department.department_name}</h2>
+              <p>Designation: {department.emp_designation}</p>
+              <p>Salary: ${department.emp_salary}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No departments found.</p>
+      )}
+    </div>
+  );
+};
+
+export default DepartmentPage;
